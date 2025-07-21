@@ -1,26 +1,33 @@
 #' @export
-scale_x_piled <- function(..., n = 5, guide = "none") {
+scale_type.ggpile_pile <- function(x) c("pile", "discrete")
+
+#' @export
+scale_x_pile <- function(..., guide = "none") {
   parent <- ggplot2::scale_x_discrete(..., guide = guide)
-  piled_scale(parent, n)
+  pile_scale(parent)
 }
 
 #' @export
-scale_y_piled <- function(..., n = 5, guide = "none") {
+scale_y_pile <- function(..., guide = "none") {
   parent <- ggplot2::scale_y_discrete(..., guide = guide)
-  piled_scale(parent, n)
+  pile_scale(parent)
 }
 
-piled_scale <- function(parent, n) {
-  force(n)
+pile_scale <- function(parent) {
   ggplot2::ggproto(
-    "ScaleDiscretePositionPiled", parent,
-    map = function(self, x, limits = self$get_limits()) {
-      x <- ggplot2::ggproto_parent(parent, self)$map(x, limits)
-      pile <- x >= n + 1
-      pile[is.na(pile)] <- FALSE
-      r <- x[pile] %% n
-      x[pile] <- ifelse(r < 1, r + n, r)
+    "ScalePilePosition", parent,
+    pile_map = NULL,
+    transform = function(self, x) {
+      stopifnot(is_pile(x))
+      self$pile_map <- attr(x, "map")
       x
+    },
+    map = function(self, x, limits = self$get_limits()) {
+      x <- ggplot2::ggproto_parent(parent, self)$map(x, limits = limits)
+      ind <- round(x)
+      if (all(!is.finite(x))) return(x)
+      if (max(ind) != length(self$pile_map)) return(x)
+      self$pile_map[ind] + x - ind
     }
   )
 }
