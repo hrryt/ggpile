@@ -37,7 +37,9 @@ PositionPile <- ggplot2::ggproto(
 pos_pile <- function(df, width, vjust = 1, fill = FALSE) {
   n <- nrow(df) + 1
   y <- ifelse(is.na(df$y), 0, df$y)
-  df <- df[order(y), ]
+
+  df <- df[order(abs(y)), ]
+
   heights <- c(0, df$y)
   if (fill) {
     heights <- heights / abs(heights[length(heights)])
