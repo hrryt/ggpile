@@ -1,7 +1,7 @@
 #' @export
-stat_pile <- function(mapping = NULL, data = NULL, geom = "bar",
-                      position = "identity", ...,
-                      na.rm = FALSE, orientation = NA, desc = FALSE, mod = 7,
+stat_pile <- function(mapping = NULL, data = NULL,
+                      geom = "bar", position = "identity", ...,
+                      na.rm = FALSE, orientation = NA, desc = FALSE, mod = 10,
                       show.legend = NA, inherit.aes = TRUE) {
   params <- rlang::list2(
     na.rm = na.rm, orientation = orientation,
@@ -20,7 +20,10 @@ StatPile <- ggplot2::ggproto(
   retransform = FALSE,
   required_aes = "x|y",
   optional_aes = "mirror",
-  default_aes = ggplot2::aes(fill = after_stat(level)),
+  default_aes = ggplot2::aes(
+    fill = after_stat(level),
+    colour = after_stat(level)
+  ),
   extra_params = c("na.rm", "orientation", "desc", "mod"),
   setup_params = function(self, data, params) {
     params$flipped_aes <- ggplot2::has_flipped_aes(
@@ -28,9 +31,8 @@ StatPile <- ggplot2::ggproto(
     )
     params
   },
-  compute_panel = function(self, data, scales,
-                           flipped_aes = FALSE,
-                           desc = FALSE, mod = 7) {
+  compute_panel = function(self, data, scales, flipped_aes = FALSE,
+                           desc = FALSE, mod = 10) {
     if (empty(data)) return(data.frame())
 
     data$flipped_aes <- flipped_aes
