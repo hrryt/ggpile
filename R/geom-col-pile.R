@@ -9,6 +9,7 @@ geom_col_pile <- function(
   lineend = "butt",
   linejoin = "mitre",
   na.rm = FALSE,
+  draw_shadow = TRUE,
   shadow_width = NULL,
   shadow_depth = NULL,
   show.legend = NA,
@@ -18,8 +19,13 @@ geom_col_pile <- function(
     data = data, mapping = mapping, stat = stat, geom = GeomColPile,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = rlang::list2(
-      na.rm = na.rm, just = just, lineend = lineend, linejoin = linejoin,
-      shadow_width = shadow_width, shadow_depth = shadow_depth,
+      na.rm = na.rm,
+      just = just,
+      lineend = lineend,
+      linejoin = linejoin,
+      draw_shadow = draw_shadow,
+      shadow_width = shadow_width,
+      shadow_depth = shadow_depth,
       ...
     )
   )
@@ -36,6 +42,7 @@ GeomColPile <- ggplot2::ggproto(
     lineend = "butt",
     linejoin = "mitre",
     flipped_aes = FALSE,
+    draw_shadow = TRUE,
     shadow_width = NULL,
     shadow_depth = NULL
   ) {
@@ -66,10 +73,12 @@ GeomColPile <- ggplot2::ggproto(
 
     data <- data[order(abs(data$level), decreasing = TRUE), ]
 
-    shadow_width <- shadow_width %||% (0.85 * data$width %||% 0.9)
-    shadow_depth <- shadow_depth %||% (max(abs(data$y)) / 200)
-    data_shadow <- shadow_data(data, linear_gradient_fun, shadow_width, shadow_depth)
-    data <- rbind(data, data_shadow)
+    if (draw_shadow) {
+      shadow_width <- shadow_width %||% (0.85 * data$width %||% 0.9)
+      shadow_depth <- shadow_depth %||% (max(abs(data$y)) / 200)
+      data_shadow <- shadow_data(data, linear_gradient_fun, shadow_width, shadow_depth)
+      data <- rbind(data, data_shadow)
+    }
 
     data <- ggplot2::flip_data(data, flipped_aes)
     ggplot2::ggproto_parent(ggplot2::GeomCol, self)$draw_panel(
