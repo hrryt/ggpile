@@ -35,6 +35,13 @@ StatPile <- ggplot2::ggproto(
                            desc = FALSE, mod = 10) {
     if (empty(data)) return(data.frame())
 
+    if (!rlang::is_scalar_integerish(mod) || mod < 1) {
+      cli::cli_abort("{.var mod} must be a positive integer")
+    }
+    if (!rlang::is_scalar_logical(desc)) {
+      cli::cli_abort("{.var desc} must be a logical value")
+    }
+
     data$flipped_aes <- flipped_aes
     data <- ggplot2::flip_data(data, flipped_aes)
 
