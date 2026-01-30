@@ -3,3 +3,4 @@
 ^ggpile\.Rproj$
 ^LICENSE\.md$
 scraps
+^README\.Rmd$

@@ -21,8 +21,8 @@ StatPile <- ggplot2::ggproto(
   required_aes = "x|y",
   optional_aes = "mirror",
   default_aes = ggplot2::aes(
-    fill = after_stat(level),
-    colour = after_stat(level)
+    fill = after_stat(dlevel),
+    colour = after_stat(dlevel)
   ),
   extra_params = c("na.rm", "orientation", "desc", "mod"),
   setup_params = function(self, data, params) {
@@ -59,6 +59,7 @@ StatPile <- ggplot2::ggproto(
       pile(split_data[[1]], flipped_aes = flipped_aes, desc = desc, mod = mod),
       pile(split_data[[2]], flipped_aes = flipped_aes, desc = desc, mod = mod)
     )
+    pile_data$dlevel = as.factor(pile_data$level)
     flip_data(pile_data, flipped_aes)
   }
 )
@@ -84,9 +85,6 @@ pile <- function(df, flipped_aes, desc, mod) {
 
   df <- df[order(df$y, decreasing = TRUE), ]
   nrow <- nrow(df)
-  if (df$group[1] != -1) {
-    nrow <- length(unique(df$group))
-  }
 
   level <- rep(rev(seq_len(ceiling(nrow / mod))), each = mod)
   df$level <- level[seq_len(nrow)]
