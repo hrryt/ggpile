@@ -1,14 +1,15 @@
 #' @export
 geom_col_pile <- function(mapping = NULL, data = NULL,
                           stat = "pile", position = "identity", ...,
-                          just = 0.5, width = NULL, na.rm = FALSE,
+                          just = 0.5, lineend = "butt", linejoin = "mitre",
+                          na.rm = FALSE,
                           shadow_width = NULL, shadow_depth = NULL,
                           show.legend = NA, inherit.aes = TRUE) {
   ggplot2::layer(
     data = data, mapping = mapping, stat = stat, geom = GeomColPile,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = rlang::list2(
-      just = just, width = width, na.rm = na.rm,
+      na.rm = na.rm, just = just, lineend = lineend, linejoin = linejoin,
       shadow_width = shadow_width, shadow_depth = shadow_depth,
       ...
     )
@@ -20,7 +21,7 @@ GeomColPile <- ggplot2::ggproto(
   "GeomColPile", ggplot2::GeomCol,
   draw_panel = function(self, data, panel_params, coord,
                         lineend = "butt", linejoin = "mitre",
-                        width = NULL, flipped_aes = FALSE,
+                        flipped_aes = FALSE,
                         shadow_width = NULL, shadow_depth = NULL) {
     data <- ggplot2::flip_data(data, flipped_aes)
 
