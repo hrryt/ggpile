@@ -117,7 +117,7 @@ get_linear_gradient_fun <- function(flipped_aes) {
       )
     }
   } else {
-    function(colours, ymin, ymx) {
+    function(colours, ymin, ymax) {
       grid::linearGradient(
         colours = colours,
         y1 = ymin,
