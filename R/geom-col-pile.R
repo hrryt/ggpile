@@ -1,10 +1,19 @@
 #' @export
-geom_col_pile <- function(mapping = NULL, data = NULL,
-                          stat = "pile", position = "identity", ...,
-                          just = 0.5, lineend = "butt", linejoin = "mitre",
-                          na.rm = FALSE,
-                          shadow_width = NULL, shadow_depth = NULL,
-                          show.legend = NA, inherit.aes = TRUE) {
+geom_col_pile <- function(
+  mapping = NULL,
+  data = NULL,
+  stat = "pile",
+  position = "identity",
+  ...,
+  just = 0.5,
+  lineend = "butt",
+  linejoin = "mitre",
+  na.rm = FALSE,
+  shadow_width = NULL,
+  shadow_depth = NULL,
+  show.legend = NA,
+  inherit.aes = TRUE
+) {
   ggplot2::layer(
     data = data, mapping = mapping, stat = stat, geom = GeomColPile,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -19,10 +28,17 @@ geom_col_pile <- function(mapping = NULL, data = NULL,
 #' @export
 GeomColPile <- ggplot2::ggproto(
   "GeomColPile", ggplot2::GeomCol,
-  draw_panel = function(self, data, panel_params, coord,
-                        lineend = "butt", linejoin = "mitre",
-                        flipped_aes = FALSE,
-                        shadow_width = NULL, shadow_depth = NULL) {
+  draw_panel = function(
+    self,
+    data,
+    panel_params,
+    coord,
+    lineend = "butt",
+    linejoin = "mitre",
+    flipped_aes = FALSE,
+    shadow_width = NULL,
+    shadow_depth = NULL
+  ) {
     data <- ggplot2::flip_data(data, flipped_aes)
 
     data$level_above <- data$level + sign(data$level)

@@ -1,8 +1,17 @@
 #' @export
-stat_pile <- function(mapping = NULL, data = NULL,
-                      geom = "bar", position = "identity", ...,
-                      na.rm = FALSE, orientation = NA, desc = FALSE, mod = 10,
-                      show.legend = NA, inherit.aes = TRUE) {
+stat_pile <- function(
+  mapping = NULL,
+  data = NULL,
+  geom = "bar",
+  position = "identity",
+  ...,
+  na.rm = FALSE,
+  orientation = NA,
+  desc = FALSE,
+  mod = 10,
+  show.legend = NA,
+  inherit.aes = TRUE
+) {
   params <- rlang::list2(
     na.rm = na.rm, orientation = orientation,
     desc = desc, mod = mod, ...
@@ -31,8 +40,14 @@ StatPile <- ggplot2::ggproto(
     )
     params
   },
-  compute_panel = function(self, data, scales, flipped_aes = FALSE,
-                           desc = FALSE, mod = 10) {
+  compute_panel = function(
+    self,
+    data,
+    scales,
+    flipped_aes = FALSE,
+    desc = FALSE,
+    mod = 10
+  ) {
     if (empty(data)) return(data.frame())
 
     if (!rlang::is_scalar_integerish(mod) || mod < 1) {
